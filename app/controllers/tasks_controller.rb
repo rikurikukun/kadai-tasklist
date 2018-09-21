@@ -43,7 +43,6 @@ end
 
   def destroy
     
-    @task.destroy
      @task.destroy
     flash[:success] = 'メッセージを削除しました。'
     redirect_back(fallback_location: root_path)
