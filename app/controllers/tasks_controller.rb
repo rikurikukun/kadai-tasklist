@@ -2,9 +2,12 @@ class TasksController < ApplicationController
   before_action :set_task, only: [:show, :edit, :update, :destroy]
   
    def index
+     if logged_in?
+      @task = current_user.microposts.build  # form_for 用
      @tasks = Task.all
+     end
    end
-
+end
   def show
   end
 
@@ -46,7 +49,7 @@ class TasksController < ApplicationController
     redirect_back(fallback_location: root_path)
   end
 
-  end
+  
 
 private
 
