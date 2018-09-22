@@ -1,60 +1,61 @@
 class TasksController < ApplicationController
   before_action :set_task, only: [:show, :edit, :update, :destroy]
+  before_action :require_user_logged_in
   
    def index
      if logged_in?
-      @task = current_user.microposts.build  # form_for 用
-     @tasks = Task.all
+      @task = current_user.tasks.build  
+      @tasks = current_user.tasks.order('created_at DESC').page(params[:page])
      end
    end
-end
-  def show
-  end
 
-  def new
-    @task = Task.new
-  end
+   def show
+   end
 
-  def create
+   def new
+     @task = Task.new
+   end
+
+   def create
     @task = current_user.tasks.build(task_params)
-    if @task.save
-      flash[:success] = 'メッセージを投稿しました。'
-      redirect_to root_url
-    else
-      @tasks = current_user.tasks.order('created_at DESC').page(params[:page])
-      flash.now[:danger] = 'メッセージの投稿に失敗しました。'
-      render 'toppages/index'
-    end
-  end
+     if @task.save
+       flash[:success] = 'メッセージを投稿しました。'
+       redirect_to root_url
+     else
+       @tasks = current_user.tasks.order('created_at DESC').page(params[:page])
+       flash.now[:danger] = 'メッセージの投稿に失敗しました。'
+       render 'tasks/index'
+     end
+   end
 
-  def edit
-  end
+   def edit
+   end
 
-  def update
+   def update
 
-    if @task.update(task_params)
-      flash[:success] = 'Task は正常に更新されました'
-      redirect_to @task
-    else
-      flash.now[:danger] = 'Task は更新されませんでした'
-      render :edit
-    end
-  end
+     if @task.update(task_params)
+       flash[:success] = 'Task は正常に更新されました'
+       redirect_to @task
+     else
+       flash.now[:danger] = 'Task は更新されませんでした'
+       render :edit
+     end
+   end
 
-  def destroy
+   def destroy
     
-     @task.destroy
-    flash[:success] = 'メッセージを削除しました。'
-    redirect_back(fallback_location: root_path)
-  end
+      @task.destroy
+     flash[:success] = 'メッセージを削除しました。'
+     redirect_back(fallback_location: root_path)
+   end
 
   
 
-private
+  private
 
-def set_task
-  @task = Task.find(params[:id])
-end
+  def set_task
+    @task = Task.find(params[:id])
+  end
 
   # Strong Parameter
   def task_params
@@ -62,9 +63,10 @@ end
   end
 
 
-def correct_user
-    @task = current_user.microposts.find_by(id: params[:id])
-    unless @task
-      redirect_to root_url
-    end
+  def correct_user
+      @task = current_user.microposts.find_by(id: params[:id])
+      unless @task
+        redirect_to root_url
+      end
+  end
 end
