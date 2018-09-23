@@ -15,6 +15,7 @@
         <div>
           <% if current_user == task.user %>
             <%= link_to "Delete", task, method: :delete, data: { confirm: "You sure?" }, class: 'btn btn-danger btn-xs' %>
+            <%= link_to "edit", task, class: 'btn btn-success btn-xs'%>
           <% end %>
         </div>
       </div>

@@ -1,6 +1,7 @@
 class TasksController < ApplicationController
   before_action :set_task, only: [:show, :edit, :update, :destroy]
   before_action :require_user_logged_in
+  before_action :correct_user, only: [:destroy]
   
    def index
      if logged_in?
@@ -10,6 +11,7 @@ class TasksController < ApplicationController
    end
 
    def show
+       @user = User.find(params[:id])
    end
 
    def new
@@ -43,10 +45,9 @@ class TasksController < ApplicationController
    end
 
    def destroy
-    
-      @task.destroy
+     @task.destroy
      flash[:success] = 'メッセージを削除しました。'
-     redirect_back(fallback_location: root_path)
+     redirect_to @task
    end
 
   
@@ -64,7 +65,7 @@ class TasksController < ApplicationController
 
 
   def correct_user
-      @task = current_user.microposts.find_by(id: params[:id])
+      @task = current_user.tasks.find_by(id: params[:id])
       unless @task
         redirect_to root_url
       end

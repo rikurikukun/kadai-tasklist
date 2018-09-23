@@ -2,6 +2,7 @@
 
   <div class="row">
     <aside class="col-md-4">
+      
       <%= form_for(@task) do |f| %>
         <div class="form-group">
           <p>content</p>
@@ -18,6 +19,8 @@
       <%= render 'tasks/tasks', tasks: @tasks %>
     </div>
   </div>
+  <p>現在のログインユーザー名: <%= current_user.name %>
+</p>
 <% else %>
   <div class="center jumbotron">
     <div class="text-center">
